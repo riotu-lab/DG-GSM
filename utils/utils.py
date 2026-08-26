@@ -13,7 +13,7 @@ def calculate_psnr_ssim(pred, target):
     batch_size = pred_np.shape[0]
     for i in range(batch_size):
         psnr_value = psnr(target_np[i], pred_np[i], data_range=1)
-        ssim_value = ssim(target_np[i], pred_np[i], data_range=1, channel_axis=-1)
+        ssim_value = ssim(target_np[i], pred_np[i], data_range=1, multichannel=True)
         total_psnr += psnr_value
         total_ssim += ssim_value
     avg_psnr = total_psnr / batch_size
