@@ -119,7 +119,7 @@ object detection performance using **YOLOv12** on three image versions:
 
 - **Night**: original low-light images
 - **DG-GSM**: enhanced images
-- **GT**: ground-truth / well-lit images (upper bound)
+- **GT**: ground-truth / well-lit images
 
 ### 📥 YOLOv12 Detection Results
 
