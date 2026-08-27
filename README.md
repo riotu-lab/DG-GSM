@@ -202,14 +202,6 @@ Common options you may expose (depending on your code):
 --lr 2e-4
   ```
 ---
-## ✅ Evaluation (Paired: PSNR/SSIM/LPIPS)
-  ```
-python evaluate.py \
-  --config configs/eval_isai_dark.yaml \
-  --ckpt checkpoints/best_model_psnr.pth
-
-  ```
----
 ## 🖼️ Inference (Single Folder)
   ```
 python test.py \
@@ -219,6 +211,14 @@ python test.py \
 
   ```
 ---
+## ✅ Evaluation (Paired: PSNR/SSIM/LPIPS)
+  ```
+python evaluate.py \
+  --config configs/eval_isaid_dark.yaml
+
+  ```
+---
+
 
 ## 📌 Citation
 If you use this work, please cite:
