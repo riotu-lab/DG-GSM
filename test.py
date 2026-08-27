@@ -6,13 +6,52 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.utils import save_image
 from PIL import Image
+import argparse
 from models.DG_GSM import DGGSM 
 import yaml
 
+
+
 def test():
+    args = parse_args()
+
     # Load configuration
-    with open('configs/config.yaml', 'r') as f:
+    with open(args.config, "r") as f:
         config = yaml.safe_load(f)
+
+    # Command-line arguments override YAML values
+    weights_path = args.ckpt or config.get("weights_path")
+    test_lq_dir = args.input_dir or config.get("test_lq_dir")
+
+    if args.output_dir:
+        output_dir = args.output_dir
+    else:
+        output_dir = os.path.join(
+            config.get("output_dir", "results"),
+            "test_results",
+        )
+
+    if not weights_path:
+        raise ValueError(
+            "No checkpoint was provided. Use --ckpt or set "
+            "'weights_path' in configs/config.yaml."
+        )
+
+    if not os.path.isfile(weights_path):
+        raise FileNotFoundError(
+            f"Checkpoint not found: {weights_path}"
+        )
+
+    if not test_lq_dir:
+        raise ValueError(
+            "No input directory was provided. Use --input_dir or set "
+            "'test_lq_dir' in configs/config.yaml."
+        )
+
+    if not os.path.isdir(test_lq_dir):
+        raise NotADirectoryError(
+            f"Input directory not found: {test_lq_dir}"
+        )
 
     device = torch.device(config['device'] if torch.cuda.is_available() else 'cpu')
     image_size = config['image_size']  # Read image size from config
@@ -43,8 +82,6 @@ def test():
             return lq_image, lq_img_name  # Return the image tensor and its filename
 
     # Paths to your test images and the directory to save output images
-    test_lq_dir = config['test_lq_dir']
-    output_dir = os.path.join(config['output_dir'], 'test_results')
     os.makedirs(output_dir, exist_ok=True)
 
     # Create the test dataset and dataloader
@@ -53,7 +90,9 @@ def test():
 
     # Initialize model
     model = DGGSM(**config["model"])
-    model.load_state_dict(torch.load(config['weights_path'], map_location=device))
+    # model.load_state_dict(torch.load(config['weights_path'], map_location=device))
+    state_dict = torch.load(weights_path,map_location=device, weights_only=True)
+    model.load_state_dict(state_dict)
     model.to(device)
     model.eval()
 
@@ -72,4 +111,38 @@ def test():
     print("All images have been processed and saved.")
 
 if __name__ == "__main__":
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description="Run DG-GSM inference"
+        )
+
+        parser.add_argument(
+            "--config",
+            type=str,
+            default="configs/config.yaml",
+            help="Path to the YAML configuration file",
+        )
+
+        parser.add_argument(
+            "--ckpt",
+            type=str,
+            default=None,
+            help="Path to the trained checkpoint",
+        )
+
+        parser.add_argument(
+            "--input_dir",
+            type=str,
+            default=None,
+            help="Directory containing low-light input images",
+        )
+
+        parser.add_argument(
+            "--output_dir",
+            type=str,
+            default=None,
+            help="Directory for enhanced images",
+        )
+
+        return parser.parse_args()
     test()
