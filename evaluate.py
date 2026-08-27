@@ -43,7 +43,7 @@ def metric(gt, pre, loss_fn_vgg):
     gt = gt.cpu().detach().numpy().astype(np.uint8)[0]
 
     psnr = compare_psnr(gt, pre)
-    ssim = compare_ssim(gt, pre, data_range=255, channel_axis=-1)
+    ssim = compare_ssim(gt, pre, data_range=255, multichannel=True)
     rmse = calc_rmse(gt, pre)
 
     return psnr, ssim, lpips_value, rmse
