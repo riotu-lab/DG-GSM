@@ -223,11 +223,11 @@ python evaluate.py \
 ## 📌 Citation
 If you use this work, please cite:
   ```
-@article{ali_DGGSM_2025,
+@article{ali_DGGSM_2026,
   title   = {DG-GSM: Dual-Branch Gated Selective Modulation Network for Low-Light Remote Sensing Image Enhancement},
   author  = {Ali, Anas M. and Benjdira, Bilel and Aloqayli, Hamad and Othman, Esam and Boulila, Wadii},
   journal = {Under Review},
-  year    = {2025}
+  year    = {2026}
 }
 
   ```
