@@ -194,16 +194,13 @@ python train.py --config configs/config.yaml
 
   ```
 Common options you may expose (depending on your code):
-
+  ```
 --config
-
 --device cuda
-
 --batch_size 4
-
 --epochs 500
-
 --lr 2e-4
+  ```
 ---
 ## ✅ Evaluation (Paired: PSNR/SSIM/LPIPS)
   ```
