@@ -1,0 +1,7 @@
+device: "cuda:6"
+
+gt_dir: "/media/akoubaa/MySSD/home/anas/low_light_Remote_sensning/iSAID/val/gt"
+
+pred_dir: "/media/akoubaa/MySSD/home/anas/low_light_Remote_sensning/test_repo/DG-GSM/outputs"
+
+lpips_net: "alex"
