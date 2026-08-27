@@ -10,6 +10,7 @@ from PIL import Image
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from skimage.color import rgb2lab
+import argparse
 import yaml
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -49,26 +50,41 @@ def metric(gt, pre, loss_fn_vgg):
     return psnr, ssim, lpips_value, rmse
 
 def evaluation():
-    # Load configuration
-    with open('configs/config.yaml', 'r') as f:
+    args = parse_args()
+
+    with open(args.config, "r") as f:
         config = yaml.safe_load(f)
 
-    gt_root = config['val_gt_dir']
-    #pred_root = os.path.join(config['output_dir'], 'test_results')
-    pred_root = os.path.join(config["output_dir"], "test_results")
+    gt_root = config["gt_dir"]
+    pred_root = config["pred_dir"]
+
+    if not os.path.isdir(gt_root):
+        raise NotADirectoryError(
+            f"Ground-truth directory not found: {gt_root}"
+        )
+
+    if not os.path.isdir(pred_root):
+        raise NotADirectoryError(
+            f"Prediction directory not found: {pred_root}"
+        )
+
+    print(f"Ground-truth directory: {gt_root}")
+    print(f"Prediction directory:   {pred_root}")
 
     fnames = os.listdir(gt_root)
     fnames.sort()
 
     psnr_all_list, ssim_all_list, lpips_all_list, rmse_all_list = [], [], [], []
     
-    loss_fn_vgg = lpips.LPIPS(net='vgg').to(device)  # vgg is used in the paper
-
+    # loss_fn_vgg = lpips.LPIPS(net='vgg').to(device)  # vgg is used in the paper
+    loss_fn_vgg = lpips.LPIPS(net=config.get("lpips_net", "alex")).to(device)
+    missing_files = []
     for fname in fnames:
         gt_path = os.path.join(gt_root, fname)
         pre_path = os.path.join(pred_root, fname)
 
         if not os.path.exists(pre_path):
+            missing_files.append(fname)
             continue
 
         gt_image = np.array(Image.open(gt_path).convert('RGB'))
@@ -87,6 +103,16 @@ def evaluation():
         ssim_all_list.append(ssim_all)
         lpips_all_list.append(lpips_all)
         rmse_all_list.append(rmse_all)
+        
+    evaluated_count = len(psnr_all_list)
+    if evaluated_count == 0:
+        raise RuntimeError(
+            "No matching prediction images were found. "
+            "Check pred_dir and image filenames."
+        )
+
+    print(f"Evaluated images: {evaluated_count}/{len(fnames)}")
+    print(f"Missing predictions: {len(missing_files)}")
 
     print('-----------------------------------------------------------------------------')
     print(f'All PSNR: {round(np.average(psnr_all_list), 4)}')
@@ -95,4 +121,16 @@ def evaluation():
     print(f'All RMSE: {round(np.average(rmse_all_list), 4)}')
 
 if __name__ == "__main__":
+
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description="Evaluate DG-GSM output images"
+        )
+        parser.add_argument(
+            "--config",
+            type=str,
+            default="configs/eval_isaid_dark.yaml",
+            help="Path to evaluation YAML file",
+        )
+        return parser.parse_args()
     evaluation()
