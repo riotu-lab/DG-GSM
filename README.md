@@ -231,8 +231,38 @@ python evaluate.py \
 
   ```
 ---
+## Native-Resolution U3D Inference and Evaluation (Table VII)
 
+`u3d_inference_evaluation.py` runs DG-GSM inference and no-reference evaluation
+in one command. It uses `weights/iSAID-dark_best.pth` by default, processes all
+100 U3D images at their native 3840Ã—2160 resolution, and does not resize, crop,
+or tile the inputs. The script verifies that every saved output preserves the
+input dimensions, then computes NIQE, BRISQUE, and
+`U3D-PI = (NIQE + BRISQUE) / 2` for both the original and enhanced images.
 
+Install the evaluation dependency:
+
+```bash
+pip install pyiqa
+```
+
+Run inference and evaluation:
+
+```bash
+python u3d_inference_evaluation.py \
+  --input-dir /path/to/U3D/lowlight/test \
+  --checkpoint weights/iSAID-dark_best.pth \
+  --output-dir results/U3D/DG-GSM \
+  --metrics-dir results/U3D/metrics \
+  --device cuda:0
+```
+
+The script generates the enhanced PNG images and three CSV files:
+`u3d_inference_summary.csv`, `u3d_per_image_metrics.csv`, and
+`u3d_summary_metrics.csv`. The `image_size: 512` setting in
+`configs/config.yaml` is ignored; only the model architecture is loaded.
+
+---
 ## 📌 Citation
 If you use this work, please cite:
   ```
