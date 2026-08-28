@@ -35,8 +35,9 @@ class MSCM(nn.Module):
     Multi-Scale Context Module (MSCM).
     
     Based on Atrous Spatial Pyramid Pooling (ASPP) for multi-scale 
-    context aggregation. Uses dilated convolutions with rates {1, 6, 12, 18}
-    plus global average pooling to capture context at multiple scales.
+    context aggregation. Uses one 1x1 projection branch, three 3x3 atrous convolution
+    branches with dilation rates {6, 12, 18}, and a global-average-
+    pooling branch.
     
     Args:
         in_channels: Number of input channels
