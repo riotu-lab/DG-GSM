@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 from data.datasets import NightRemovalDataset
 from models.DG_GSM import DGGSM
-from losses.losses import CombinedLoss
+from losses.losses import NIRLLoss
 from utils.utils import calculate_psnr_ssim
 
 
@@ -165,7 +165,7 @@ def train(config):
 
     optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"], betas=(0.9, 0.999))
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config["num_epochs"], eta_min=1e-8)
-    criterion = CombinedLoss(device=device)
+    criterion = NIRLLoss(device=device)
 
     best_psnr = float("-inf")
     best_epoch = -1
