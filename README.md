@@ -231,7 +231,7 @@ python evaluate.py \
 
   ```
 ---
-## Native-Resolution U3D Inference and Evaluation (Table VII)
+## Native-Resolution U3D Inference and Evaluation
 
 `u3d_inference_evaluation.py` runs DG-GSM inference and no-reference evaluation
 in one command. It uses `weights/iSAID-dark_best.pth` by default, processes all
