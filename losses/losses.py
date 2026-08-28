@@ -32,9 +32,10 @@ class FocalFrequencyLoss(nn.Module):
         loss = torch.pow(abs_diff, self.alpha)
         return torch.mean(loss)
 
-class CombinedLoss(nn.Module):
+class NIRLLoss(nn.Module):
+    """Night Illumination Restoration Loss (NIRL)."""
     def __init__(self, lambda_vgg=0.01, lambda_ff=0.1, device=None):
-        super(CombinedLoss, self).__init__()
+        super().__init__()
         self.lambda_vgg = lambda_vgg
         self.lambda_ff = lambda_ff
         self.l1_loss = nn.L1Loss()
