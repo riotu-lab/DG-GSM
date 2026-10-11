@@ -206,13 +206,7 @@ Update your config paths in configs/*.yaml accordingly.
 python train.py --config configs/config.yaml
 
   ```
-Common options you may expose (depending on your code):
-  ```
---config
---device cuda
---epochs 500
---lr 2e-4
-  ```
+Edit configs/config.yaml to configure the device, batch size, number of epochs, learning rate, and image size.
 ---
 ## 🖼️ Inference (Single Folder)
   ```
