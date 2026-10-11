@@ -154,7 +154,7 @@ DG-GSM/
 ---
 ## ⚙️ Installation
 ```
-git clone https://github.com/AnasHXH/DG-GSM.git
+it clone https://github.com/riotu-lab/DG-GSM.git
 cd DG-GSM
 
 python -m venv .venv
@@ -210,7 +210,6 @@ Common options you may expose (depending on your code):
   ```
 --config
 --device cuda
---batch_size 4
 --epochs 500
 --lr 2e-4
   ```
