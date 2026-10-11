@@ -154,7 +154,7 @@ DG-GSM/
 ---
 ## ⚙️ Installation
 ```
-it clone https://github.com/riotu-lab/DG-GSM.git
+git clone https://github.com/riotu-lab/DG-GSM.git
 cd DG-GSM
 
 python -m venv .venv
