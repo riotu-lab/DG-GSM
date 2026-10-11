@@ -99,9 +99,12 @@ class LFP(nn.Module):
     """
     Learned Feature Projection (LFP).
     
-    Applies learned linear projections with positional embedding to modulate
-    features at each spatial location. Uses query-key-value formulation
-    for feature transformation.
+    Applies a learned channel-wise offset shared across spatial
+    positions, followed by an affine channel projection.
+    The legacy query-key calculation produces one score per position.
+    Softmax over that singleton dimension returns one for finite scores,
+    so the effective output is proj_v(x + pos_embedding).
+    This module performs no attention between spatial positions.
     
     Args:
         dim: Feature dimension (number of channels)
@@ -145,7 +148,7 @@ class LFP(nn.Module):
         # Compute position-wise attention scores
         q = q.view(B, H * W, 1, C)  # (B, N, 1, C)
         k = k.view(B, H * W, C, 1)  # (B, N, C, 1)
-        attn = torch.matmul(q, k).squeeze(2) * self.scale  # (B, N, C)
+        attn = torch.matmul(q, k).squeeze(2) * self.scale # (B, N, 1)
         attn = attn.softmax(dim=-1)
         
         # Apply attention to values
