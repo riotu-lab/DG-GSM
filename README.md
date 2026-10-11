@@ -168,7 +168,7 @@ pip install -r requirements.txt
 | Training Dataset | Checkpoint |
 |---|---|
 | iSAID-dark | 🔗 [Download iSAID-dark_best.pth](https://drive.google.com/file/d/1Va2EJVSvXp3m8Wy8DdJIVhAtYAtlNlRX/view?usp=drive_link) |
-
+---
 After downloading, place the checkpoint in:
 
 ```text
